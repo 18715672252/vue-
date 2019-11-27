@@ -35,9 +35,9 @@
         let lisEs5 = Array.prototype.slice.call(lis);
         console.log(lisEs5 instanceof Array);//true
     //2.node.nodeType: 得到节点类型
-        let elementNode = document.getElementById('box');
-        let attrNode = elementNode.getAttributeNode('id');
-        let textNode = elementNode.firstChild;
+        let elementNode = document.getElementById('box');//1
+        let attrNode = elementNode.getAttributeNode('id');//2
+        let textNode = elementNode.firstChild;//3
         console.log(elementNode.nodeType,attrNode.nodeType,textNode.nodeType)
 
 </script>
