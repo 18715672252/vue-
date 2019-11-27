@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</body>
+<script>
+    let obj = {
+        a:1
+    }
+    f.call(obj);//这样写函数调用的同时 , 函数里面的this会指向obj,即指向,向call方法中传递的对象
+    function f(){
+        console.log(this.a)
+    }
+    //1. [].slice.call(lis):将伪数组转换为真数组 , call方法让一个函数在指定对象上面调用(该函数里面this指向,向call方法中传递的对象)
+        let lis = document.getElementsByTagName('li'); //lis是伪数组
+        //es6中Array.from(lis)可以将伪数组转化为真数组
+        console.log(lis instanceof Array);//false
+        let lisEs6 = Array.from(lis);
+        console.log(lisEs6 instanceof Array);//true
+        //es5将伪数组转化真数组
+        let lisEs5 = Array.prototype.slice.call(lis);
+        console.log(lisEs5 instanceof Array);//true
+        
+</script>
+</html>
