@@ -6,7 +6,7 @@
 </head>
 <body>
     <div id="box">1111</div>
-    <ul>
+    <ul id="ul1">
         <li></li>
         <li></li>
         <li></li>
@@ -18,10 +18,10 @@
     </ul>
 </body>
 <script>
-    let obj = {
+    let obj1 = {
         a:1
     }
-    f.call(obj);//这样写函数调用的同时 , 函数里面的this会指向obj,即指向,向call方法中传递的对象
+    f.call(obj1);//这样写函数调用的同时 , 函数里面的this会指向obj,即指向,向call方法中传递的对象
     function f(){
         console.log(this.a)
     }
@@ -39,6 +39,59 @@
         let attrNode = elementNode.getAttributeNode('id');//2
         let textNode = elementNode.firstChild;//3
         console.log(elementNode.nodeType,attrNode.nodeType,textNode.nodeType)
-
+    //3.Object.defineProperty(obj,'属性名',{value:'要设置的值'})
+        let obj = {
+            first:'A',
+            last:'B'
+        }
+        //给obj添加属性full
+        Object.defineProperty(obj,'full',{
+            //configurable:true,是否可以重新定义
+            //enumerable:true,是否可以枚举
+            //value:'aa',初始值
+            //writable:true,是否可以被修改
+            get(){//获取当前属性值时调用
+                console.log(999)
+                return this.first + '-' + this.last;
+            },
+            set(value){//修改当前属性值时调用,参数是get的返回值
+                let names = value.split('-');
+                this.first = names[0];
+                this.last = names[1];
+            }
+        })
+        console.log(obj.full);//A-b
+        obj.first = 'C';
+        obj.last = 'D';
+        console.log(obj.full)//C-D
+        obj.full = 'E-F';
+        console.log(obj.first,obj.last)//E,F
+    //4.Object.keys() //获取对象所有key值,放在数组里面
+    //5.obj.hasOwnProperty(prop) : 判断prop是否是obj的自身的属性,不算原型链上面的
+    let obj2 = {
+        age:'1'
+    }
+    console.log(obj2.hasOwnProperty('age'),obj2.hasOwnProperty('toString')) //true ,false
+    //6.DocumentFragment: 文档碎片
+        //document:对应的页面 , 包含n个element
+        //DocumentFragment:内存中保存n个element的容器对象,不予界面关联
+        let ul = document.getElementById('ul1');
+        //1.创建DocumentFragment,存放虚拟DOM的文档碎片
+            let fragment = document.createDocumentFragment();
+        //2.取出ul中所有子节点 , 保存到创建的文档碎片中,包含文本节点 , 换行也是文本节点
+            let child;
+            while (child = ul.firstChild) {//一个节点只能有一个父级
+                fragment.appendChild(child)//appendChild的作用 1.先将child从ul中移除 2.在添加到fragment中
+            }
+        //3.更新文档碎片中所有li文本
+            //fragment.childNodes 获取所有子节点 , 包括标签节点和文本节点
+            //fragment.children 获取所有元素节点
+            Array.prototype.slice.call(fragment.childNodes).forEach(node => {
+                if(node.nodeType == 1) {//节点nodeType == 1时为元素节点,
+                    node.textContent = '孙成龙'
+                }
+            });
+        //4.将文档碎片插入ul中
+            ul.appendChild(fragment);
 </script>
 </html>
