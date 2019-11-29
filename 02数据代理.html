@@ -9,6 +9,7 @@
 <body>
     <div id="app">
         <p>{{name}}</p>
+        <!-- <button v-on:click="show"></button> -->
     </div>
 </body>
 <script>
@@ -37,7 +38,12 @@
     new Mvvm({
         el:'app',
         data:{
-            name:'sunchenglong'
+            name:'孙成龙'
+        },
+        methods:{
+            show(){
+                alert(this.name)
+            }
         }
     })
     
