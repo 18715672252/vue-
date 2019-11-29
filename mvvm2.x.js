@@ -14,7 +14,7 @@ function Mvvm(options) {//相当于Vue的构造函数
         me._proxy(key);//对options.data中的属性进行数据代理,options.data中的属性添加到实例上
     })
     // observe(data,this);
-    // this.$compile = new Compile(options.el || document.body , this)
+    this.$compile = new Compile(options.el || document.body , this)
 
 }
 Mvvm.prototype = {
@@ -37,8 +37,4 @@ Mvvm.prototype = {
         })
     }
 }
-let a = new Mvvm({
-    data:{
-        name:'sun'
-    }
-})
+
