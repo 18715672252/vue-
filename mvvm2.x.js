@@ -31,7 +31,7 @@ Mvvm.prototype = {
                 return me._data[key]//当通过this.XXX取数据时就会执行 , 通过this.XXX取数据取得是options.data.XXX的值
             },
             set:function proxySetter(newVal){//当设置属性时 , vm.xxx = value时 , value被保存到data中对应的属性上 , 代理写操作
-                console.log()
+                console.log('当设置属性时 , vm.xxx = value时 , value被保存到data中对应的属性上 , 代理写操作')
                 me._data[key] = newVal
             }
         })

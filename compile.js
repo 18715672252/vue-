@@ -1,36 +1,60 @@
-//更新节点
+//更新节点属性值
 let updater = {
     textUpdater(node,value){
         node.textContent = typeof value == 'undefined' ? '' : value;
+    },
+    htmlUpdater(node,value){//更新节点的innerHTML属性值
+        node.innerHTML = typeof value == 'undefined' ? '' : value;
+    },
+    classUpdater(node,value,oldValue){//更新节点的className属性值
+        let className = node.className;
+        className = className.replace(oldValue,'').replace(/\s$/,'');
+        let space = className && String(value) ? ' ' : '';
+        node.className = className + space + 'value';
+    },
+    modelUpdater(node,value,oldValue) {//更新节点的value属性值
+        node.value = typeof value == 'undefined' ? '' : value;
     }
 }
-//指令处理集合
+//包含多个解析指令的方法的工具对象
 let compileUtil = {
-    text:function(node,vm,exp) {
+    text(node,vm,exp) {//解析v-text/{{}}
         console.log(vm)
         console.log('text')
         this.bind(node,vm,exp,'text');
     },
-    bind:function(node,vm,exp,dir){
+    html(node,vm,exp){//解析v-html
+
+    },
+    model(node,vm,exp){////解析v-model
+
+    },
+    class(){//解析v-class
+
+    },
+    bind(node,vm,exp,dir){//
         console.log(vm)
         console.log('bind')
         let updaterFn = updater[dir + 'Updater'];//拿到更新节点的对应函数
-        updaterFn && updaterFn(node,this._getVMVal(vm,exp));//updaterFn如果函数不存在不执行 , 存在的执行
+        updaterFn && updaterFn(node,this._getVMVal(vm,exp));//updaterFn如果函数不存在不执行 , 存在的执行,更新节点
         // new Watcher(vm,exp,function(value,oldValue){
         //     updaterFn && updaterFn(node,value,oldValue);
         // })
     },
-    _getVMVal(vm,exp) {
-        console.log(vm)
-        console.log('_getVMVal')
+    eventHandler(node,vm,exp,dir){
+
+    },
+    _getVMVal(vm,exp) {//从vm得到表达式所对应的值
         let val = vm._data;
-        console.log(exp)
         exp = exp.split('.');
-        console.log(exp)
         exp.forEach((k)=>{
             val = val[k]
         })
+        console.log(val)
         return val;
+    },
+    _setVMVal(vm,exp,value){
+
     }
 }
 
@@ -41,8 +65,8 @@ function Compile(el,vm){//el:绑定的元素  vm:实例对象
     console.log(this.$el)
     if(this.$el) {
         console.log(1)
-        this.$fragment = this.node2Fragment(this.$el);//el里面所有的节点转移到文档碎片中,即:实例绑定的元素里面的内容转移到文档碎片中(内存)
-        this.init();//解析模板,编译文档碎片中节点,即内存中节点
+        this.$fragment = this.node2Fragment(this.$el);//el里面所有的子节点转移到文档碎片中,即:实例绑定的元素里面的内容转移到文档碎片中(内存)
+        this.init();//解析模板,编译文档碎片中所有层次的子节点,即内存中节点
         this.$el.appendChild(this.$fragment);//编译好的文档碎片 , 重新放回实例绑定的元素里面
     }
 }
@@ -60,27 +84,43 @@ Compile.prototype = {
         return fragment;
     },
     init(){
+        //编译指定元素(所有层次子节点)
         this.compileElement(this.$fragment);
     },
-    compileElement(fragment) {//编译fragment节点所有子节点
-        let childNodes = fragment.childNodes;//获取节点的所有子节点包括换行什么的(即:文档碎片里面所有的内容) 节点数组:伪数组
+    compileElement(fragment) {//编译fragment节点所有层次子节点
+        let childNodes = fragment.childNodes;//获取最外层的所有子节点包括换行什么的(即:文档碎片里面所有的内容) 节点数组:伪数组
         let me = this;
-        Array.prototype.slice.call(childNodes).forEach(node => { //节点伪数组转化为真数组 , 并遍历
+        Array.prototype.slice.call(childNodes).forEach(node => { //遍历所有最外层子节点,伪数组转化为真数组 , 并遍历
             let text = node.textContent;//获取节点的文本内容
             let reg = /\{\{(.*)\}\}/ //匹配{{}}表达式
-            if(me.isElementNote(node)) {//判断节点是不是元素节点
-                me.compile(node)
-            }else if(me.isTextNode(node) && reg.test(text)) {
+            if(me.isElementNote(node)) {//判断节点是不是元素节点 ,是的话编译元素节点
+                me.compile(node)//编译解析指令
+            }else if(me.isTextNode(node) && reg.test(text)) { //判断节点是否是{{}}的格式文本节点
                 console.log(2)
-                me.compileText(node,RegExp.$1);//RegExp.$1代表{{name}}中name
+                me.compileText(node,RegExp.$1);//RegExp.$1代表{{name}}中name , 编译大括号表达式文本节点
             }
-            if(node.childNodes && node.childNodes.length) {//判断节点有子节点不?
+            if(node.childNodes && node.childNodes.length) {//判断节点是否有子节点?通过递归调用实现所有层次节点的编译
                 me.compileElement(node)
             }
         });
     },
     compile(node){
-
+        let nodeAttrs = node.attributes;//伪数组
+        let me = this;
+        Array.prototype.slice.call(nodeAttrs).forEach((attr)=>{
+            let attrNmae = attr.name;
+            if(me.isDirective(attrNmae)) {
+                let exp = attr.value;
+                let dir = attrNmae.substring(2);
+                //事件指令
+                if(me.isEventDirective(dir)) {
+                    compileUtil.eventHandler(node,me.$vm,exp,dir)
+                }else {
+                    compileUtil[dir] && compileUtil[dir](node,me.$vm,exp)
+                }
+                node.removeAttribute(attrNmae)
+            }
+        })
     },
     compileText(node,exp){
         console.log('compileText')
