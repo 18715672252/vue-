@@ -42,7 +42,12 @@ let compileUtil = {
         // })
     },
     eventHandler(node,vm,exp,dir){
-
+        let eventType = dir.split(':')[1];//得到事件类型 click
+        fn = vm.$options.methods && vm.$options.methods[exp];//从methods中得到对应的事件回调函数
+        if(eventType && fn) {//如果都存在
+            node.addEventListener(eventType,fn.bind(vm),false);//给节点绑定指定的事件类型和回调函数DOM事件监听
+        }
+       
     },
     _getVMVal(vm,exp) {//从vm得到表达式所对应的值
         let val = vm._data;
@@ -96,7 +101,7 @@ Compile.prototype = {
             if(me.isElementNote(node)) {//判断节点是不是元素节点 ,是的话编译元素节点
                 me.compile(node)//编译解析指令
             }else if(me.isTextNode(node) && reg.test(text)) { //判断节点是否是{{}}的格式文本节点
-                console.log(2)
+                //console.log(2)
                 me.compileText(node,RegExp.$1);//RegExp.$1代表{{name}}中name , 编译大括号表达式文本节点
             }
             if(node.childNodes && node.childNodes.length) {//判断节点是否有子节点?通过递归调用实现所有层次节点的编译
@@ -105,20 +110,22 @@ Compile.prototype = {
         });
     },
     compile(node){
-        let nodeAttrs = node.attributes;//伪数组
+        let nodeAttrs = node.attributes;//伪数组 , 获得标签的所有属性
         let me = this;
         Array.prototype.slice.call(nodeAttrs).forEach((attr)=>{
-            let attrNmae = attr.name;
-            if(me.isDirective(attrNmae)) {
-                let exp = attr.value;
-                let dir = attrNmae.substring(2);
-                //事件指令
+            let attrNmae = attr.name;//得到属性名v-on:click
+            if(me.isDirective(attrNmae)) {//判断是否是指令属性
+                console.log(attrNmae)
+                let exp = attr.value;//该标签某个属性的属性值show,同时也是绑定的methods里面方法名
+                let dir = attrNmae.substring(2);//得到指令名on:click
+                console.log(dir,exp)
+                //判断是否是事件指令
                 if(me.isEventDirective(dir)) {
-                    compileUtil.eventHandler(node,me.$vm,exp,dir)
-                }else {
+                    compileUtil.eventHandler(node,me.$vm,exp,dir)//解析事件指令
+                }else {//一般指令
                     compileUtil[dir] && compileUtil[dir](node,me.$vm,exp)
                 }
-                node.removeAttribute(attrNmae)
+                node.removeAttribute(attrNmae)//移除指令属性
             }
         })
     },
@@ -128,5 +135,11 @@ Compile.prototype = {
     },
     isTextNode(node) {
         return true;
+    },
+    isDirective(attr){
+        return attr.indexOf('v-') == 0;
+    },
+    isEventDirective(dir){
+        return dir.indexOf('on') === 0;
     }
 }

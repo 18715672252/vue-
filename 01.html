@@ -16,6 +16,7 @@
         <li></li>
         <li></li>
     </ul>
+    <div class="div" id="box1"  index="22"></div>
 </body>
 <script>
     let obj1 = {
@@ -93,5 +94,12 @@
             });
         //4.将文档碎片插入ul中
             ul.appendChild(fragment);
+    //7.获取标签的所有属性
+        document.getElementById('box1').removeAttribute('index')//移除节点的属性
+        let arrAttrs = document.getElementById('box1').attributes; //是伪数组
+        [].slice.call(arrAttrs).forEach((item)=>{//item某个属性的属性名和属性值
+           console.log(item.value,item.name)//item.value为某个属性的属性值,item.name为某个属性的属性名
+        })
+        console.log([].slice.call(arrAttrs))
 </script>
 </html>
