@@ -1,16 +1,21 @@
 //更新节点属性值
+//console.log = ()=>{};
 let updater = {
-    textUpdater(node,value){
+    textUpdater(node,value){//v-text/{{}}
         node.textContent = typeof value == 'undefined' ? '' : value;
     },
     htmlUpdater(node,value){//更新节点的innerHTML属性值
         node.innerHTML = typeof value == 'undefined' ? '' : value;
     },
     classUpdater(node,value,oldValue){//更新节点的className属性值
+        console.log('classUpdater--------------------')
+        console.log(value);
+        
         let className = node.className;
-        className = className.replace(oldValue,'').replace(/\s$/,'');
-        let space = className && String(value) ? ' ' : '';
-        node.className = className + space + 'value';
+        let space = className?' ':'';
+        
+        node.className = className + space + value;
+
     },
     modelUpdater(node,value,oldValue) {//更新节点的value属性值
         node.value = typeof value == 'undefined' ? '' : value;
@@ -19,22 +24,23 @@ let updater = {
 //包含多个解析指令的方法的工具对象
 let compileUtil = {
     text(node,vm,exp) {//解析v-text/{{}}
-        console.log(vm)
-        console.log('text')
+        //console.log(vm)
+       // console.log('text')
         this.bind(node,vm,exp,'text');
     },
     html(node,vm,exp){//解析v-html
-
+        this.bind(node,vm,exp,'html');
     },
     model(node,vm,exp){////解析v-model
 
     },
-    class(){//解析v-class
-
+    class(node,vm,exp){//解析v-class exp指令属性的指令值
+        this.bind(node,vm,exp,'class');
     },
     bind(node,vm,exp,dir){//
-        console.log(vm)
-        console.log('bind')
+        //console.log(vm)
+       // console.log('bind')
+        console.log('exp:'+exp)
         let updaterFn = updater[dir + 'Updater'];//拿到更新节点的对应函数
         updaterFn && updaterFn(node,this._getVMVal(vm,exp));//updaterFn如果函数不存在不执行 , 存在的执行,更新节点
         // new Watcher(vm,exp,function(value,oldValue){
@@ -55,7 +61,7 @@ let compileUtil = {
         exp.forEach((k)=>{
             val = val[k]
         })
-        console.log(val)
+        console.log('val: '+val)
         return val;
     },
     _setVMVal(vm,exp,value){
@@ -64,12 +70,12 @@ let compileUtil = {
 }
 
 function Compile(el,vm){//el:绑定的元素  vm:实例对象
-    console.log(vm)
+    //console.log(vm)
     this.$vm  = vm;
     this.$el = this.isElementNote(el) ? el : document.getElementById(el);//存储dom元素
-    console.log(this.$el)
+    //console.log(this.$el)
     if(this.$el) {
-        console.log(1)
+       // console.log(1)
         this.$fragment = this.node2Fragment(this.$el);//el里面所有的子节点转移到文档碎片中,即:实例绑定的元素里面的内容转移到文档碎片中(内存)
         this.init();//解析模板,编译文档碎片中所有层次的子节点,即内存中节点
         this.$el.appendChild(this.$fragment);//编译好的文档碎片 , 重新放回实例绑定的元素里面
@@ -110,27 +116,30 @@ Compile.prototype = {
         });
     },
     compile(node){
+        console.log('compile--------------------------------')
         let nodeAttrs = node.attributes;//伪数组 , 获得标签的所有属性
         let me = this;
         Array.prototype.slice.call(nodeAttrs).forEach((attr)=>{
             let attrNmae = attr.name;//得到属性名v-on:click
-            if(me.isDirective(attrNmae)) {//判断是否是指令属性
-                console.log(attrNmae)
-                let exp = attr.value;//该标签某个属性的属性值show,同时也是绑定的methods里面方法名
-                let dir = attrNmae.substring(2);//得到指令名on:click
-                console.log(dir,exp)
-                //判断是否是事件指令
-                if(me.isEventDirective(dir)) {
+            if(me.isDirective(attrNmae)) {//判断是否是指令属性根据v-
+                //console.log(attrNmae)
+                //指令值
+                let exp = attr.value;//attr.value该标签某个属性的属性值 ,指令为v-html="msg"得到msg,指令为v-on:click="show"得到show
+                //dir去掉v-的指令名
+                let dir = attrNmae.substring(2);//attr.name该标签某个属性的属性名,指令为v-on:click="show"得到on:click,指令为v-html="msg"的话得到html
+                //console.log(dir,exp)
+               if(me.isEventDirective(dir)) { //判断是否是事件指令根据on
                     compileUtil.eventHandler(node,me.$vm,exp,dir)//解析事件指令
                 }else {//一般指令
-                    compileUtil[dir] && compileUtil[dir](node,me.$vm,exp)
+                    console.log('dir'+dir)
+                    compileUtil[dir] && compileUtil[dir](node,me.$vm,exp)//判断函数存在 , 存在的话调用 , 编译一般指令
                 }
                 node.removeAttribute(attrNmae)//移除指令属性
             }
         })
     },
     compileText(node,exp){
-        console.log('compileText')
+        //console.log('compileText')
         compileUtil.text(node,this.$vm,exp);
     },
     isTextNode(node) {
