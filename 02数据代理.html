@@ -29,6 +29,7 @@
 <script>
    // console.log = ()=>{};
 </script>
+<script src="./watcher.js"></script>
 <script src="./observer.js"></script>
 <!-- 编译模板 -->
 <script src="./compile.js"></script>
@@ -59,8 +60,16 @@
                     是给data里面属性添加set方法通过Object.defineProperty(),数据劫持
             Dep:初始化创建 , 给data中属性进行数据劫持时创建 , 与data中属性一一对应
                 结构: 1.id
-    
-    
+            watcher:初始化解析模板时创建 , 有多少个表达式就有多少个wather
+            Dep(订阅者)与watcher(监视着)的关系
+                1.一个data属性---->1个Dep----->n个watcher(这个属性在模板中多次使用,使用几次这个属性 , 这个属性就有几个watcher)
+                2.一个表达式------>1个watcher--------->n个订阅者(多层表达式this.obj.a时n为2 , 这个表达式有2个订阅者)
+            如何关系建立的?
+                data中每个属性的get方法
+            什么时候建立的?
+                初始化解析模板时建立
+                
+                
     */ 
    let aa = 0;
    let bb = aa++;//先赋值在++

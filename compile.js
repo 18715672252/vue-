@@ -43,9 +43,9 @@ let compileUtil = {
         console.log('exp:'+exp)
         let updaterFn = updater[dir + 'Updater'];//拿到更新节点的对应函数
         updaterFn && updaterFn(node,this._getVMVal(vm,exp));//updaterFn如果函数不存在不执行 , 存在的执行,更新节点
-        // new Watcher(vm,exp,function(value,oldValue){
-        //     updaterFn && updaterFn(node,value,oldValue);
-        // })
+        new Watcher(vm,exp,function(value,oldValue){
+            updaterFn && updaterFn(node,value,oldValue);
+        })
     },
     eventHandler(node,vm,exp,dir){
         let eventType = dir.split(':')[1];//得到事件类型 click

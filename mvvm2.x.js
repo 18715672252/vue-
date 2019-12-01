@@ -13,8 +13,8 @@ function Mvvm(options) {//相当于Vue的构造函数
     Object.keys(data).forEach((key)=>{//遍历data中所有的属性
         me._proxy(key);//对options.data中的属性进行数据代理,options.data中的属性添加到实例上
     })
-    // observe(data,this);
-    this.$compile = new Compile(options.el || document.body , this)
+    observe(data,this);//创建Dep
+    this.$compile = new Compile(options.el || document.body , this)//创建watcher
 
 }
 Mvvm.prototype = {

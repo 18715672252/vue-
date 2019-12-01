@@ -13,10 +13,10 @@ Observer.prototype = {
     walk(data){
         var me = this;
         Object.keys(data).forEach((key)=>{
-            me.convert(key,data[key]);
+            me.convert(data,key,data[key]);
         })
     },
-    convert(key,val){
+    convert(data,key,val){
         this.defineReactive(data,key,val)//响应式数据
     },
     defineReactive(data,key,val){
@@ -25,7 +25,7 @@ Observer.prototype = {
         Object.defineProperty(data,key,{
             enumerable:true,//可枚举
             configurable:false,//不能改
-            get(){
+            get(){//Dep和watcher建立关系 , 编译模板时建立关系
                 if(Dep.target) {
                     dep.depend();
                 }
@@ -45,13 +45,19 @@ Observer.prototype = {
 let uid = 0;
 function Dep(){
     this.id = uid++;
-    this.subs = [];//订阅者
+    this.subs = [];//订阅者 n个相关的watcher容器
 }
 Dep.prototype = {
     addSub(sub){
         this.subs.push(sub)
     },
-    depend(){
+    depend(){//Dep和watcher建立关系
         Dep.target.addDep(this);
+    },
+    notify(){
+        this.subs.forEach((sub)=>{//sub代表每个watcher
+            sub.update();
+        })
     }
 }
+Dep.target = null;
