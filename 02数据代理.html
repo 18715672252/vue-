@@ -24,6 +24,7 @@
         <p class="bb" v-class="myclass"></p>
         <p v-on:click="upNum">更新新数据</p>
         <p>{{num}}</p>
+        <p>{{num}}</p>
     </div>
 </body>
 <script>
@@ -68,7 +69,14 @@
                 data中每个属性的get方法
             什么时候建立的?
                 初始化解析模板时建立
-                
+
+
+    总结:当data里面的aa属性发生改变是 , 
+         aa所对应的set函数就会触发 , 
+         就会执行aa所对应的订阅器(dep)的dep.notice()方法,
+         dep.notice()就会遍历该dep的订阅者数组,并执行订阅者数组里面每个订阅者的update(),
+         update方法会调用在compile时给该订阅者绑定的试图更新函数
+
                 
     */ 
    let aa = 0;

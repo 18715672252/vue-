@@ -7,6 +7,7 @@ function Watcher(vm,exp,cb){
 }
 Watcher.prototype = {
     update(){
+        console.log('77777777777777777777777777777777777777777777777777777')
         this.run();
     },
     run(){
@@ -33,9 +34,9 @@ Watcher.prototype = {
     },
     addDep(dep){
         console.log('addDep')
-        if(!this.depIds.hasOwnProperty(dep.id)) {
-            dep.addSub(this);
-            this.depIds[dep.id] = dep;
+        if(!this.depIds.hasOwnProperty(dep.id)) {//判断watcher与dep是否已经建立
+            dep.addSub(this); //将watcher添加到dep中 , 用于更新试图
+            this.depIds[dep.id] = dep;//将dep添加到watcher中
             console.log(this.depIds)
         }
     }
