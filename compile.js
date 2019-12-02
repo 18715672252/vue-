@@ -19,6 +19,7 @@ let updater = {
     },
     modelUpdater(node,value,oldValue) {//更新节点的value属性值
         node.value = typeof value == 'undefined' ? '' : value;
+        console.log('modelUpdater')
     }
 }
 //包含多个解析指令的方法的工具对象
@@ -32,6 +33,18 @@ let compileUtil = {
         this.bind(node,vm,exp,'html');
     },
     model(node,vm,exp){////解析v-model
+        this.bind(node,vm,exp,'model');
+        let me = this;
+        let val = this._getVMVal(vm,exp);
+        node.addEventListener('input',function(e){
+            let newValue = e.target.value;
+            console.log(newValue)
+            if(val === newValue) {
+                return
+            }
+            me._setVMVal(vm,exp,newValue);
+            val = newValue
+        })
 
     },
     class(node,vm,exp){//解析v-class exp指令属性的指令值
@@ -65,7 +78,8 @@ let compileUtil = {
         return val;
     },
     _setVMVal(vm,exp,value){
-
+        console.log(vm)
+        vm._data[exp] = value;//修改data里面的数据又会触发监听器 , 去更新试图
     }
 }
 

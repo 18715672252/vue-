@@ -25,6 +25,8 @@
         <p v-on:click="upNum">更新新数据</p>
         <p>{{num}}</p>
         <p>{{num}}</p>
+        <input type="text" v-model="msg1">
+        <p>{{msg1}}</p>
     </div>
 </body>
 <script>
@@ -94,7 +96,8 @@
             name:'孙成龙',
             msg:'<a href="https://www.baidu.com">百度</a>',
             myclass:'aa',
-            num:1
+            num:1,
+            msg1:147
         },
         methods:{
             show(){
