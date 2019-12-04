@@ -56,6 +56,7 @@ Dep.prototype = {
     },
     depend(){//Dep和watcher建立关系 
         Dep.target.addDep(this);//将watcher添加到dep中 , 同时也将dep添加到watcher
+        console.log(this.subs)
     },
     notify(){
         this.subs.forEach((sub)=>{//sub代表每个watcher
