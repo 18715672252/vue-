@@ -15,6 +15,23 @@
         删除远程分之 git push origin :dev
         查看本地与远程的分支 git branch -av<br>
         查看本地与远程关联的分支 git branch -vv<br>
+        删除文件 git rm 文件名<br>
+        文件重命名 git mv 1.txt 2.txt  //把1.txt该名为2.txt<br>
+        查看文件夹的所有文件 ls<br>
+        命令行修改文件 1-vim 文件名 2-Insert切换编辑还是替换 3-左下角显示替换后按esc键 输入(1)-:wq保存并退出 (2)-:q!不保存直接退出<br>
+        查看文件内容 cat 文件名<br>
+        查看commit的差异 git diff HEAD HEAD~1 //查看最近一次提交与最近一次提交的上一次提交的差异<br>
+        修改最近一次提交信息 git commit --amend 然后修改文件的过程<br>
+        暂存区与工作区比较 git diff --cached<br>
+        把所有文件恢复到和工作区一样 git reset HEAD<br>
+        比较分支差异 git diff dev master<br>
+        比较不同分支下相同文件名的文件的差异 git diff dev master -- 2.txt<br>
+        删除文件 git rm 文件名
+        显示当前文件的路径 pwd
+        .gitignore配置
+            *.d 任何以.d结尾的文件不被追踪
+            aa/ 任何以.aa结尾文件夹下文件不被追踪
+            node_modules文件夹不被追踪
         1-本地分支推送到远程(本地有远程没有)<br>
             方法一（dev是分支名）<br>
             (1)-创建一个新分支并切换到该分之 git checkout -b dev<br>
@@ -30,8 +47,7 @@
             方法二（dev是分支名）<br>
             (1)-git pull<br>
             (2)-get checkout --track origin/dev #解释：在本创建一个dev分支,并且和远程上的dev分支相关联<br>
-        3-冲突解决(远程与本地冲突
-        )
+        3-冲突解决(远程与本地冲突)
             3.1-git remote show origin  #查看远程有没有新的提交
             3.2-有冲突的话
                 (1)-git pull
@@ -39,5 +55,6 @@
                 (3)-git add 冲突文件
                 (4)-git commit -m '注释'
                 (5)-git push
+                
 </body>
 </html>
