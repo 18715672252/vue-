@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+/*
+    2.数据代理
+        1.通过一个对象代理另一个对象中属性操作(读/写)
+        2.通过vm对象来代理data对象中的所有属性
+        3.好处:更方便操作data中的数据
+        4.基本实现
+            1).通过Object.defineProperty()给vm添加与data对象的属性对应的属性描述符
+            2).所有添加属性都包含getter/setter
+            3).在getter/setter内部去操作data中对应属性数据
+    3.模板解析
+        1.模板解析的关键对象：compile
+        2.模板解析的基本流程
+            1).将el的所有层次的子节点取出，添加到一个新建的文档碎片中fragmnet对象中
+            2).对fragment中所有层次的子节点递归进行编译处理
+                * 对插值表达式文本节点进行解析
+                * 对元素节点的指令进行解析
+                    * 事件指令
+                    * 一般指令
+            3).将解析后的fragment添加到el中显示
+        3.解析大括号表达式文本节点：{{name}}----textNode.textConent = value;
+             1).根据正则表达式得到匹配出的表达式字符串：子匹配：RegExp.$1 
+             2).从data中取出表达式对应的属性值
+             3).将属性值设置为文本节点的textContent
+        4.事件指令解析
+            1).指令中取出事件名
+            2).根据指令值从methods中得到对应的事件处理函数
+            3).给当前元素绑定指定的事件名和回调函数的dom事件监听
+            4).指令解析后将此指令移除
+        5.一般指令解析
+            1).得到指令名和指令值
+            2).从data中根据表达式得到对应值
+            3).根据指令名确定需要操作元素节点的什么属性
+    4.数据劫持--->数据绑定
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</html>

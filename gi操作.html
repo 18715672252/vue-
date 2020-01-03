@@ -8,11 +8,17 @@
 </head>
 <body>
         本地分支与远程分之的关联操作<br>
+        创建分支 git branch dev
+        切换分之 git checkout dev
+        创建并切换到该分支 git checkout -b dev
+        删除本地分支 git branch -d dev (不能删除当前分支)
+        删除远程分之 git push origin :dev
         查看本地与远程的分支 git branch -av<br>
+        查看本地与远程关联的分支 git branch -vv<br>
         1-本地分支推送到远程(本地有远程没有)<br>
             方法一（dev是分支名）<br>
             (1)-创建一个新分支并切换到该分之 git checkout -b dev<br>
-            (2)-推送到远程 git push -u origin dev<br>
+            (2)-推送到远程 git push origin dev<br>
             方法二<br>
             (1)-创建一个新分支并切换到该分之 git checkout -b dev<br>
             (2)-推送到远程 git push --set-upstream origin dev<br>
@@ -24,5 +30,14 @@
             方法二（dev是分支名）<br>
             (1)-git pull<br>
             (2)-get checkout --track origin/dev #解释：在本创建一个dev分支,并且和远程上的dev分支相关联<br>
+        3-冲突解决(远程与本地冲突
+        )
+            3.1-git remote show origin  #查看远程有没有新的提交
+            3.2-有冲突的话
+                (1)-git pull
+                (2)-修改有冲突的文件
+                (3)-git add 冲突文件
+                (4)-git commit -m '注释'
+                (5)-git push
 </body>
 </html>
