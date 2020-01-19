@@ -28,6 +28,7 @@
         比较不同分支下相同文件名的文件的差异 git diff dev master -- 2.txt<br>
         删除文件 git rm 文件名
         显示当前文件的路径 pwd
+        查看某次提交 git show commitID
         .gitignore配置
             *.d 任何以.d结尾的文件不被追踪
             aa/ 任何以.aa结尾文件夹下文件不被追踪
@@ -59,7 +60,7 @@
             4.1-标签的作用
             例子：已经发布了v1.0,v2.0两个版本 ， v3.0已经开发到一般 ， 现在想直接跳过v3.0的版本 ， 去开发v4.0版本(这个时候就用到了标签)
             说明：新建一个tag(标签)是基于当前分支所指向的commit
-            1.新建一个标签-git tag -a 标签名 -m '标签备注';新建一个指向指定commit的标签-git tag -a 分支名 commitID   
+            1.新建一个标签-git tag -a 标签名 -m '标签备注';新建一个指向指定commit的标签-git tag -a 标签名 commitID   
             2.推送到远程-git push origin 标签名
             3.查看某个标签-git show 标签名
             4.查看本地所有标签-git tag
